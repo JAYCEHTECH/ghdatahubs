@@ -62,7 +62,7 @@ def pay_with_wallet(request):
                 print(num_without_0)
                 receiver_body = {
                     'recipient': f"233{num_without_0}",
-                    'sender_id': 'GH Data Hubs',
+                    'sender_id': 'GH DATA HUB',
                     'message': receiver_message
                 }
 
@@ -71,7 +71,7 @@ def pay_with_wallet(request):
 
                 sms_body = {
                     'recipient': f"233{request.user.phone}",
-                    'sender_id': 'GH Data Hubs',
+                    'sender_id': 'GH DATA HUB',
                     'message': sms_message
                 }
 
@@ -159,7 +159,7 @@ def airtel_tigo(request):
                 print(num_without_0)
                 receiver_body = {
                     'recipient': f"233{num_without_0}",
-                    'sender_id': 'GH Data Hubs',
+                    'sender_id': 'GH DATA HUB',
                     'message': receiver_message
                 }
 
@@ -168,7 +168,7 @@ def airtel_tigo(request):
 
                 sms_body = {
                     'recipient': f"233{request.user.phone}",
-                    'sender_id': 'GH Data Hubs',
+                    'sender_id': 'GH DATA HUB',
                     'message': sms_message
                 }
 
@@ -185,12 +185,12 @@ def airtel_tigo(request):
 
                 sms_body = {
                     'recipient': f"233{request.user.phone}",
-                    'sender_id': 'GH Data Hubs',
+                    'sender_id': 'GH DATA HUB',
                     'message': sms_message
                 }
                 response = requests.request('POST', url=sms_url, params=sms_body, headers=sms_headers)
                 print(response.text)
-                # r_sms_url = f"https://sms.arkesel.com/sms/api?action=send-sms&api_key=UmpEc1JzeFV4cERKTWxUWktqZEs&to={phone_number}&from=Noble Data GH&sms={receiver_message}"
+                # r_sms_url = f"https://sms.arkesel.com/sms/api?action=send-sms&api_key=UmpEc1JzeFV4cERKTWxUWktqZEs&to={phone_number}&from=GH DATA HUB GH&sms={receiver_message}"
                 # response = requests.request("GET", url=r_sms_url)
                 # print(response.text)
                 return JsonResponse({'status': 'Something went wrong', 'icon': 'error'})
@@ -202,7 +202,7 @@ def airtel_tigo(request):
 
             sms_body = {
                 'recipient': f'233{request.user.phone}',
-                'sender_id': 'Noble Data',
+                'sender_id': 'GH DATA HUB',
                 'message': sms_message
             }
 
@@ -249,8 +249,8 @@ def mtn_pay_with_wallet(request):
         user.wallet -= float(amount)
         user.save()
         sms_body = {
-            'recipient': "233242664332",
-            'sender_id': 'GH Data Hubs',
+            'recipient': "233596389575",
+            'sender_id': 'GH DATA HUB',
             'message': sms_message
         }
         response = requests.request('POST', url=sms_url, params=sms_body, headers=sms_headers)
@@ -299,8 +299,8 @@ def mtn(request):
         sms_message = f"An order has been placed. {bundle}MB for {phone_number}"
 
         sms_body = {
-            'recipient': "233242664332",
-            'sender_id': 'GH Data Hubs',
+            'recipient': "233596389575",
+            'sender_id': 'GH DATA HUB',
             'message': sms_message
         }
         response = requests.request('POST', url=sms_url, params=sms_body, headers=sms_headers)
@@ -374,7 +374,7 @@ def mark_as_sent(request, pk):
 
         sms_body = {
             'recipient': f"233{txn.bundle_number}",
-            'sender_id': 'GH Data Hubs',
+            'sender_id': 'GH DATA HUB',
             'message': sms_message
         }
         response = requests.request('POST', url=sms_url, params=sms_body, headers=sms_headers)
