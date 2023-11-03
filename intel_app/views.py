@@ -38,7 +38,7 @@ def pay_with_wallet(request):
         print(data)
 
         sms_headers = {
-            'Authorization': 'Bearer 1315|OPvu39KHZES3kegBxSJPIb5UmdYhw0WXXLdTivOC',
+            'Authorization': 'Bearer 1316|tRwVVHxzUpAEBZRIQL3jY01y4qmVyoxnw6YMSofU',
             'Content-Type': 'application/json'
         }
 
@@ -137,7 +137,7 @@ def airtel_tigo(request):
         print(data)
 
         sms_headers = {
-            'Authorization': 'Bearer 1315|OPvu39KHZES3kegBxSJPIb5UmdYhw0WXXLdTivOC',
+            'Authorization': 'Bearer 1316|tRwVVHxzUpAEBZRIQL3jY01y4qmVyoxnw6YMSofU',
             'Content-Type': 'application/json'
         }
 
@@ -225,7 +225,7 @@ def mtn_pay_with_wallet(request):
         print(amount)
         print(reference)
         sms_headers = {
-            'Authorization': 'Bearer 1315|OPvu39KHZES3kegBxSJPIb5UmdYhw0WXXLdTivOC',
+            'Authorization': 'Bearer 1316|tRwVVHxzUpAEBZRIQL3jY01y4qmVyoxnw6YMSofU',
             'Content-Type': 'application/json'
         }
 
@@ -291,7 +291,7 @@ def mtn(request):
         )
         new_mtn_transaction.save()
         sms_headers = {
-            'Authorization': 'Bearer 1315|OPvu39KHZES3kegBxSJPIb5UmdYhw0WXXLdTivOC',
+            'Authorization': 'Bearer 1316|tRwVVHxzUpAEBZRIQL3jY01y4qmVyoxnw6YMSofU',
             'Content-Type': 'application/json'
         }
 
@@ -365,7 +365,7 @@ def mark_as_sent(request, pk):
         txn.transaction_status = "Completed"
         txn.save()
         sms_headers = {
-            'Authorization': 'Bearer 1315|OPvu39KHZES3kegBxSJPIb5UmdYhw0WXXLdTivOC',
+            'Authorization': 'Bearer 1316|tRwVVHxzUpAEBZRIQL3jY01y4qmVyoxnw6YMSofU',
             'Content-Type': 'application/json'
         }
 
