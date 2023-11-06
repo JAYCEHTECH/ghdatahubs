@@ -491,6 +491,7 @@ def credit_user_from_list(request, reference):
         response = requests.request('POST', url=sms_url, params=sms_body, headers=sms_headers)
         print(response.text)
         crediting.status = True
+        crediting.credited_at = datetime.now()
         crediting.save()
         messages.success(request, f"{user} has been credited with {amount}")
         return redirect('topup_list')
