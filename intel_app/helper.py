@@ -25,11 +25,19 @@ ishare_map = {
     560: 200000
 }
 
+
 def ref_generator():
     now_time = datetime.now().strftime('%H%M%S')
     secret = secrets.token_hex(2)
 
     return f"{now_time}{secret}".upper()
+
+
+def top_up_ref_generator():
+    now_time = datetime.now().strftime('%H%M')
+    secret = secrets.token_hex(1)
+
+    return f"TOPUP-{now_time}{secret}".upper()
 
 
 def send_bundle(user, receiver, bundle_amount, reference):
@@ -79,6 +87,3 @@ def verify_paystack_transaction(reference):
     print(response.json())
 
     return response
-
-
-

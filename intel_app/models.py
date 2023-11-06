@@ -26,7 +26,14 @@ class CustomUser(AbstractUser):
 class AdminInfo(models.Model):
     name = models.CharField(max_length=250, null=True, blank=True)
     phone_number = models.BigIntegerField(null=True, blank=True)
+    momo_number = models.PositiveBigIntegerField(null=True, blank=True)
     email = models.EmailField(null=True, blank=True)
+    choices = (
+        ("MTN Mobile Money", "MTN Mobile Money"),
+        ("Vodafone Cash", "Vodafone Cash"),
+        ("AT Money", "AT Money")
+    )
+    payment_channel = models.CharField(max_length=250, choices=choices)
 
 
 class IShareBundleTransaction(models.Model):
@@ -113,3 +120,13 @@ class Payment(models.Model):
 
     def __str__(self):
         return f"{self.user.username} - {self.reference}"
+
+
+
+class TopUpRequest(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    reference = models.CharField(max_length=250, null=False, blank=False)
+    amount = models.FloatField(blank=False, null=False)
+    status = models.BooleanField(default=False, blank=False, null=False)
+    date = models.DateTimeField(auto_now_add=True)
+    credited_at = models.DateTimeField(auto_now_add=True)
