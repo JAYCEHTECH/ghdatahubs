@@ -406,7 +406,7 @@ def credit_user(request):
         return render(request, "layouts/services/credit.html", context=context)
     else:
         messages.error(request, "Access Denied")
-        return redirect('credit_user')
+        return redirect('home')
 
 
 @login_required(login_url='login')
