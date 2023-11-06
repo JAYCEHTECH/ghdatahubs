@@ -382,9 +382,10 @@ def mark_as_sent(request, pk):
         return redirect('mtn_admin')
 
 
+@login_required(login_url='login')
 def credit_user(request):
+    form = forms.CreditUserForm()
     if request.user.is_superuser:
-        form = forms.CreditUserForm()
         if request.method == "POST":
             form = forms.CreditUserForm(request.POST)
             if form.is_valid():
