@@ -383,25 +383,29 @@ def mark_as_sent(request, pk):
 
 
 def credit_user(request):
-    form = forms.CreditUserForm()
-    if request.method == "POST":
-        form = forms.CreditUserForm(request.POST)
-        if form.is_valid():
-            user = form.cleaned_data["user"]
-            amount = form.cleaned_data["amount"]
-            print(user)
-            print(amount)
-            user_needed = models.CustomUser.objects.get(username=user)
-            if user_needed.wallet is None:
-                user_needed.wallet = float(amount)
-            else:
-                user_needed.wallet += float(amount)
-            user_needed.save()
-            print(user_needed.username)
-            messages.success(request, "Crediting Successful")
-            return redirect('credit_user')
-    context = {'form': form}
-    return render(request, "layouts/services/credit.html", context=context)
+    if request.user.is_superuser:
+        form = forms.CreditUserForm()
+        if request.method == "POST":
+            form = forms.CreditUserForm(request.POST)
+            if form.is_valid():
+                user = form.cleaned_data["user"]
+                amount = form.cleaned_data["amount"]
+                print(user)
+                print(amount)
+                user_needed = models.CustomUser.objects.get(username=user)
+                if user_needed.wallet is None:
+                    user_needed.wallet = float(amount)
+                else:
+                    user_needed.wallet += float(amount)
+                user_needed.save()
+                print(user_needed.username)
+                messages.success(request, "Crediting Successful")
+                return redirect('credit_user')
+        context = {'form': form}
+        return render(request, "layouts/services/credit.html", context=context)
+    else:
+        messages.error(request, "Access Denied")
+        return redirect('credit_user')
 
 
 @login_required(login_url='login')

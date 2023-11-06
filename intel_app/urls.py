@@ -18,7 +18,7 @@ urlpatterns = [
     path('mtn_admin', views.admin_mtn_history, name='mtn_admin'),
 
     path('mark_as_sent/<int:pk>', views.mark_as_sent, name='mark_as_sent'),
-    # path('credit_user', views.credit_user, name='credit_user'),
+    path('credit_user', views.credit_user, name='credit_user'),
     path('pay_with_wallet/', views.pay_with_wallet, name='pay_with_wallet'),
     path('mtn_pay_with_wallet/', views.mtn_pay_with_wallet, name='mtn_pay_with_wallet'),
     path('topup-info', views.topup_info, name='topup-info'),
