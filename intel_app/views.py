@@ -226,6 +226,8 @@ def mtn_pay_with_wallet(request):
         reference = request.POST.get("reference")
         print(phone_number)
         print(amount)
+        auth = config("AT")
+        user_id = config("USER_ID")
         print(reference)
         sms_headers = {
             'Authorization': 'Bearer 1316|tRwVVHxzUpAEBZRIQL3jY01y4qmVyoxnw6YMSofU',
@@ -240,6 +242,24 @@ def mtn_pay_with_wallet(request):
         elif user.wallet <= 0 or user.wallet < float(amount):
             return JsonResponse({'status': f'Your wallet balance is low. Contact the admin to recharge. Admin Contact Info: 0{admin}'})
         bundle = models.MTNBundlePrice.objects.get(price=float(amount)).bundle_volume if user.status == "User" else models.AgentMTNBundlePrice.objects.get(price=float(amount)).bundle_volume
+        url = "https://posapi.bestpaygh.com/api/v1/initiate_mtn_transaction"
+
+        payload = json.dumps({
+            "user_id": user_id,
+            "receiver": phone_number,
+            "data_volume": bundle,
+            "reference": reference,
+            "amount": amount,
+            "channel": "wallet"
+        })
+        headers = {
+            'Authorization': auth,
+            'Content-Type': 'application/json'
+        }
+
+        response = requests.request("POST", url, headers=headers, data=payload)
+
+        print(response.text)
         print(bundle)
         sms_message = f"An order has been placed. {bundle}MB for {phone_number}"
         new_mtn_transaction = models.MTNTransaction.objects.create(
@@ -286,7 +306,24 @@ def mtn(request):
         offer = request.POST.get("amount")
 
         bundle = models.MTNBundlePrice.objects.get(price=float(offer)).bundle_volume if user.status == "User" else models.AgentMTNBundlePrice.objects.get(price=float(offer)).bundle_volume
+        url = "https://posapi.bestpaygh.com/api/v1/initiate_mtn_transaction"
 
+        payload = json.dumps({
+            "user_id": user_id,
+            "receiver": phone_number,
+            "data_volume": bundle,
+            "reference": reference,
+            "amount": offer,
+            "channel": "wallet"
+        })
+        headers = {
+            'Authorization': auth,
+            'Content-Type': 'application/json'
+        }
+
+        response = requests.request("POST", url, headers=headers, data=payload)
+
+        print(response.text)
         print(phone_number)
         new_mtn_transaction = models.MTNTransaction.objects.create(
             user=request.user,

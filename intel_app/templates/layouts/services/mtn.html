@@ -66,108 +66,16 @@
 {% block scripts %}
 
 <script>
-  const paymentForm = document.getElementById('mtnPaymentForm');
+    const paymentForm = document.getElementById('mtnPaymentForm');
   let email = $(".email").val()
   let ref = $(".reference").val()
-  let amount = $(".mtn-offer").val()
-  console.log(amount)
-  let wholeThing = $(".mtn-offer").text()
-  let phonenumber = $(".mtn-phone").val()
-      let jsonData = JSON.parse('{{mtn_dict | safe}}');
-    console.log(jsonData)
-  function getSelectedText() {
-    const selectedText = $('.mtn-offer').find('option:selected').text();// Output: Text of the selected option within .mtn-offer
-    return selectedText;
-  }
-
-  // Call the function on page load
-  let offerMtn = getSelectedText();
-  let bundle_volume = jsonData[offerMtn]
-
-
-
-  // Event listener for changes in the select element
-  $('.mtn-offer').change(function() {
-    offerMtn = getSelectedText();
-    bundle_volume = jsonData[offerMtn]// Output: Updated text of the selected option within .mtn-offer
-  });
   console.log(email + ref)
-  console.log(offerMtn)
-
-
-    const postDataToFirebase = (data) => {
-    console.log(offerMtn +"-offer")
-      console.log(amount)
-      console.log(jsonData[offerMtn])
-  return fetch('https://posapi.bestpaygh.com/api/v1/initiate_mtn_transaction', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': '{{auth}}'
-      // Other headers if required
-    },
-    body: JSON.stringify(data),
-  });
-};
-
-const retryAttempts = 3; // Number of retry attempts
-let currentAttempt = 1;
-let token = $("input[name=csrfmiddlewaretoken]").val();
-
-const saveData = (data, reference, phone, currentAttempt = 0) => {
-  console.log(wholeThing)
-  const retryAttempts = 3
-
-  postDataToFirebase(data)
-    .then((response) => {
-      console.log(response)
-      if (response.ok) {
-        console.log('Data saved successfully to Firebase');
-      $.ajax({
-        url: '/services/mtn/',
-        method: "POST",
-        data: {
-          phone: phone,
-          amount: data["amount"],
-          reference: reference,
-          csrfmiddlewaretoken: token,
-        },
-        success: function(response){
-          Swal.fire({text: response.status, icon:response.icon, confirmButtonText:"Okay"}).then((value) => {
-            location.reload()
-          })
-        }
-      })
-        // Handle success if needed
-      } else {
-        $.ajax({
-        url: '/services/mtn/',
-        method: "POST",
-        data: {
-          phone: phone,
-          amount: data["amount"],
-          reference: reference,
-          csrfmiddlewaretoken: token,
-        },
-        success: function(response){
-          Swal.fire({text: response.status, icon:response.icon, confirmButtonText:"Okay"}).then((value) => {
-            location.reload()
-          })
-        }
-      })
-        Swal.fire({text: "Something went wrong", icon: "error"})
-        throw new Error('Failed to save data');
-      }
-    })
-};
-
   paymentForm.addEventListener("submit", payWithPaystack, false);
   function payWithPaystack(e) {
     e.preventDefault();
+    let amount = $(".mtn-offer").val()
     let phonenumber = $(".mtn-phone").val()
-    amount = $(".mtn-offer").val()
-    console.log("new amount " + amount)
-    if (phonenumber.toString().length < 10 || phonenumber.toString().length !== 10 || phonenumber.toString().length > 10){
+    if (phonenumber.toString().length < 10 || phonenumber.toString().length != 10 || phonenumber.toString().length > 10){
       Swal.fire({text: "Phone number must be 10 digits"})
       return;
     }
@@ -175,7 +83,7 @@ const saveData = (data, reference, phone, currentAttempt = 0) => {
   let handler = PaystackPop.setup({
     key: 'pk_live_2230bb77b771f4a0486d82574d23c7e936ed8188', // Replace with your public key
     email: email,
-    amount: Math.round(amount * 100),
+    amount: amount * 100,
     currency: "GHS",
     ref: ref, // generates a pseudo-unique reference. Please replace with a reference you generated. Or remove the line entirely so our API will generate one for you
     // label: "Optional string that replaces customer email"
@@ -184,22 +92,26 @@ const saveData = (data, reference, phone, currentAttempt = 0) => {
       location.reload()
     },
     callback: function(response){
-      let reference = response.reference
+      reference = response.reference
       let message = 'Payment complete! Reference: ' + response.reference;
       Swal.fire({text: "Processing your order"})
       Swal.showLoading();
-
-      console.log(bundle_volume + "yoooo")
-      let data = {
-        "user_id": "{{user_id}}",
-        "receiver": phonenumber,
-        "data_volume": bundle_volume,
-        "reference": reference,
-        "amount": amount,
-        "channel": "{{phone_num}}"
-      }
-      saveData(data, reference, phonenumber)
-
+      let token = $("input[name=csrfmiddlewaretoken]").val();
+      $.ajax({
+        url: '/services/mtn/',
+        method: "POST",
+        data: {
+          phone: phonenumber,
+          amount: amount,
+          reference: reference,
+          csrfmiddlewaretoken: token,
+        },
+        success: function(response){
+          Swal.fire({text: response.status, icon:response.icon, confirmButtonText:"Okay"}).then((value) => {
+            location.reload()
+          })
+        }
+      })
     }
   });
 
@@ -222,82 +134,24 @@ $("body").on('click', '.pay-with-wallet', function(e){
 
     console.log("yes")
     e.preventDefault()
-   let amount = $(".mtn-offer").val()
+    console.log(email)
+    console.log(ref)
+
+  let token = $("input[name=csrfmiddlewaretoken]").val();
+    let amount = $(".mtn-offer").val()
     let phonenumber = $(".mtn-phone").val()
     if (phonenumber.toString().length < 10 || phonenumber.toString().length !== 10 || phonenumber.toString().length > 10){
       Swal.fire({text: "Phone number must be 10 digits"})
       return;
     }
 
-    const paymentForm = document.getElementById('mtnPaymentForm');
-  let email = $(".email").val()
-  let ref = $(".reference").val()
-  amount = $(".mtn-offer").val()
-  let wallet = '{{wallet}}'
-  if (parseFloat(wallet) < amount){
-    Swal.fire({text: "Not enough wallet balance", icon: 'error'})
-      location.reload();
-  }
-  let wholeThing = $(".mtn-offer").text()
-  phonenumber = $(".mtn-phone").val()
-      let jsonData = JSON.parse('{{mtn_dict | safe}}');
-    console.log(jsonData)
-  function getSelectedText() {
-    const selectedText = $('.mtn-offer').find('option:selected').text();// Output: Text of the selected option within .mtn-offer
-    return selectedText;
-  }
-
-  // Call the function on page load
-  let offerMtn = getSelectedText();
-  let bundle_volume = jsonData[offerMtn]
-  console.log(bundle_volume)
-  console.log(jsonData)
-
-
-
-  // Event listener for changes in the select element
-  $('.mtn-offer').change(function() {
-    offerMtn = getSelectedText();
-    bundle_volume = jsonData[offerMtn]// Output: Updated text of the selected option within .mtn-offer
-  });
-  console.log(email + ref)
-  console.log(offerMtn)
-
-
-    const postDataToFirebase = (data) => {
-    console.log(offerMtn +"-offer")
-      console.log(amount)
-      console.log(jsonData[offerMtn])
-  return fetch('https://posapi.bestpaygh.com/api/v1/initiate_mtn_transaction', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': '{{auth}}'
-      // Other headers if required
-    },
-    body: JSON.stringify(data),
-  });
-};
-  let token = $("input[name=csrfmiddlewaretoken]").val();
-
-const retryAttempts = 5; // Number of retry attempts
-let currentAttempt = 1;
-
-const saveData = (data, reference, phone) => {
-  console.log(wholeThing)
-
-  postDataToFirebase(data)
-    .then((response) => {
-      console.log(response)
-      if (response.ok) {
-        console.log('Data saved successfully to Firebase');
-          $.ajax({
+    $.ajax({
       method: "POST",
       url: "/mtn_pay_with_wallet/",
       data: {
-        phone: phone,
+        phone: phonenumber,
         amount: amount,
-        reference: reference,
+        reference: ref,
         csrfmiddlewaretoken: token,
       },
       success: function (response) {
@@ -311,43 +165,6 @@ const saveData = (data, reference, phone) => {
             })
       },
     });
-        // Handle success if needed
-      } else {
-        $.ajax({
-      method: "POST",
-      url: "/mtn_pay_with_wallet/",
-      data: {
-        phone: phone,
-        amount: amount,
-        reference: reference,
-        csrfmiddlewaretoken: token,
-      },
-      success: function (response) {
-        console.log(response.status)
-        firstBtn.prop('disabled', false)
-        secondBtn.prop('disabled', false)
-        secondBtn.text("Pay with Wallet")
-        process.css('display', 'none')
-        Swal.fire({text: response.status, confirmButtonText:"Okay", allowOutsideClick: false, allowEscapeKey: false}).then((value) => {
-              location.reload()
-            })
-      },
-    });
-         Swal.fire({text: "Something went wrong", icon: "error"})
-        throw new Error('Failed to save data');
-      }
-    })
-};
-  console.log(bundle_volume + "yoooo")
-  let data = {
-        "user_id": "{{user_id}}",
-        "receiver": phonenumber,
-        "data_volume": bundle_volume,
-        "reference": ref,
-        "amount": amount,
-        "channel": "{{phone_num}}"
-      }
-  saveData(data, ref, phonenumber)
   })
 </script>
 
