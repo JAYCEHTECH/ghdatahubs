@@ -221,6 +221,7 @@ def airtel_tigo(request):
 def mtn_pay_with_wallet(request):
     if request.method == "POST":
         user = models.CustomUser.objects.get(id=request.user.id)
+        phone = user.phone
         phone_number = request.POST.get("phone")
         amount = request.POST.get("amount")
         reference = request.POST.get("reference")
@@ -250,7 +251,7 @@ def mtn_pay_with_wallet(request):
             "data_volume": bundle,
             "reference": reference,
             "amount": amount,
-            "channel": "wallet"
+            "channel": phone
         })
         headers = {
             'Authorization': auth,
@@ -285,6 +286,7 @@ def mtn_pay_with_wallet(request):
 @login_required(login_url='login')
 def mtn(request):
     user = models.CustomUser.objects.get(id=request.user.id)
+    phone = user.phone
     status = user.status
     form = forms.MTNForm(status=status)
     reference = helper.ref_generator()
@@ -314,7 +316,7 @@ def mtn(request):
             "data_volume": bundle,
             "reference": reference,
             "amount": offer,
-            "channel": "wallet"
+            "channel": phone
         })
         headers = {
             'Authorization': auth,
