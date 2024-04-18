@@ -243,24 +243,24 @@ def mtn_pay_with_wallet(request):
         elif user.wallet <= 0 or user.wallet < float(amount):
             return JsonResponse({'status': f'Your wallet balance is low. Contact the admin to recharge. Admin Contact Info: 0{admin}'})
         bundle = models.MTNBundlePrice.objects.get(price=float(amount)).bundle_volume if user.status == "User" else models.AgentMTNBundlePrice.objects.get(price=float(amount)).bundle_volume
-        url = "https://posapi.bestpaygh.com/api/v1/initiate_mtn_transaction"
+
+        url = "https://merchant.cloudhubgh.com/api/initiate_mtn"
 
         payload = json.dumps({
-            "user_id": user_id,
-            "receiver": phone_number,
-            "data_volume": bundle,
+            "receiver": str(phone_number),
+            "data_volume": int(bundle),
             "reference": reference,
-            "amount": amount,
-            "channel": phone
+            "amount": "10"
         })
         headers = {
-            'Authorization': auth,
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Authorization': config("BEARER_TOKEN"),
         }
 
         response = requests.request("POST", url, headers=headers, data=payload)
 
         print(response.text)
+
         print(bundle)
         sms_message = f"An order has been placed. {bundle}MB for {phone_number}"
         new_mtn_transaction = models.MTNTransaction.objects.create(
