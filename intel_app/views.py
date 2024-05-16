@@ -251,7 +251,7 @@ def mtn_pay_with_wallet(request):
             "data_volume": int(bundle),
             "reference": reference,
             "amount": "10",
-            "phone_number": f"0{request.user.phone}"
+            "phone_number": f"{user.phone}"
         })
         headers = {
             'Content-Type': 'application/json',
