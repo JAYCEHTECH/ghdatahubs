@@ -244,14 +244,14 @@ def mtn_pay_with_wallet(request):
             return JsonResponse({'status': f'Your wallet balance is low. Contact the admin to recharge. Admin Contact Info: 0{admin}'})
         bundle = models.MTNBundlePrice.objects.get(price=float(amount)).bundle_volume if user.status == "User" else models.AgentMTNBundlePrice.objects.get(price=float(amount)).bundle_volume
 
-        url = "https://merchant.cloudhubgh.com/api/initiate_mtn"
+        url = "https://console.hubnet.app/api/initiate_mtn"
 
         payload = json.dumps({
             "receiver": str(phone_number),
             "data_volume": int(bundle),
             "reference": reference,
             "amount": "10",
-            "phone_number": f"{user.phone}"
+            "referrer": f"{user.phone}"
         })
         headers = {
             'Content-Type': 'application/json',
