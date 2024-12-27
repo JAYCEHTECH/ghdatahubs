@@ -255,7 +255,7 @@ def mtn_pay_with_wallet(request):
         })
         headers = {
             'Content-Type': 'application/json',
-            'Authorization': config("BEARER_TOKEN"),
+            'token': config("BEARER_TOKEN"),
         }
 
         response = requests.request("POST", url, headers=headers, data=payload)
