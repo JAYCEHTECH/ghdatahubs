@@ -31,7 +31,8 @@ DEBUG = False
 ALLOWED_HOSTS = [
     '127.0.0.1',
     'ghdatahub-2pcgz.ondigitalocean.app',
-    'www.ghdatahubs.com'
+    'www.ghdatahubs.com',
+    'console.ghdatahubs.com'
 ]
 
 
